@@ -8,6 +8,7 @@ import cors from "cors";
 import express from "express";
 const app = express();
 
+//cookie parser ko import kia
 import cookieParser from 'cookie-parser';
 
 import connectDB from "./db/db.js"; // export default connectDB;
@@ -19,7 +20,7 @@ connectDB();// fn call kiya
 app.use(cors());
 app.use(express.json()); //json format me Apis allow kiya.
 app.use(express.urlencoded({ extended:true }));
-app.use(cookieParser());
+app.use(cookieParser());// cookies ka use krne ke liye
 
 // '/ route k liye get request
 app.get('/',(req,res)=>{

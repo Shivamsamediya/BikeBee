@@ -73,6 +73,7 @@ export const loginUser = async(req,res,next)=>{
     //agr ho gya to...token generate kro.
     const token = await user.generateAuthToken();
 
+    //token ko cookie me set kro
     res.cookie('token',token);
 
     //response me token aur user bhejo
@@ -84,10 +85,12 @@ export const userProfile = async(req,res,next)=>{
 }
 
 export const logoutUser = async (req,res,next) => {
+    //token ko cookie me se clear kro
     res.clearCookie('token');
 
     const token = req.cookies.token || (req.headers.authorization?.split(' ')[1]);
 
+    //token ko blacklist kro
     blackListToken.create({ token });
 
     res.status(200).json({message:"Logged out"});
