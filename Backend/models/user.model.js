@@ -26,7 +26,7 @@ const userSchema =  mongoose.Schema({
         type:String,
         required:true,
         select:false,
-        minLength:[6,"Password length must be greater than 3"]
+        minLength:[6,"Password length must be greater than 6"]
     },
     socketId:{
         type:String

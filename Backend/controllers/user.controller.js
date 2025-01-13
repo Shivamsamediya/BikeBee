@@ -17,9 +17,16 @@ export const registerUser = async (req,res,next)=>{
         return res.status(400).json({ errors:errors.array() });
     }
 
+    
     // req.body se name ,email,password nikalo
     const { fullName, email, password } = req.body;
+    
+    const isUserExists =  await captainModel.findOne({email});
 
+    if(isUserExists){
+        return res.status(400).json({message:"User with this email already exists"});
+    }
+    
     //password ko hash kro 
     const hashedPassword = await User.hashPassword(password);
 

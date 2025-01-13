@@ -12,7 +12,8 @@ const app = express();
 import cookieParser from 'cookie-parser';
 
 import connectDB from "./db/db.js"; // export default connectDB;
-import userRoute from "./routes/user.routes.js"
+import userRoute from "./routes/user.routes.js";
+import captainRoute from './routes/captain.routes.js';
 
 connectDB();// fn call kiya
 
@@ -29,6 +30,8 @@ app.get('/',(req,res)=>{
 
 // router for /users.
 app.use('/users',userRoute);
+app.use('/captains',captainRoute);
+
 
 export default app;
 
