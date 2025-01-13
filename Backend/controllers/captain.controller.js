@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 
 import captainModel from '../models/captain.model.js';
 
-import { validationResult } from 'express-validator';
+import { cookie, validationResult } from 'express-validator';
 
 import { createCaptain } from '../services/captain.service.js';
 
@@ -47,4 +47,32 @@ export const registerCaptain = async (req,res,next)=>{
 
     // token aur user ko return kro with success status.
     res.status(201).json({ token, captain });
+}
+
+export const loginCaptain = async(req,res,next)=>{
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        return res.status(400).json({ errors:errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    const captain = await captainModel.findOne({ email }).select('+password');
+
+    if(!captain){
+        return res.status(401).json({message:"Invalid email or password"});
+    }
+    
+    const isMatch = await captain.comparePassword(password);
+
+    if(!isMatch){
+        return res.status(401).json({message:"Invalid email or password"});
+    }
+
+    const token = await captain.generateAuthToken();
+
+    res.cookie('token',token);
+
+    res.status(200).json({ token, captain });
 }
