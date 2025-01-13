@@ -38,3 +38,39 @@ export const registerUser = async (req,res,next)=>{
     // token aur user ko return kro with success status.
     res.status(201).json({ token, user });
 }
+
+export const loginUser = async(req,res,next)=>{
+    // check kro if any err?
+    const errors = validationResult(req);
+
+    // if err then return err status
+    if(!errors.isEmpty()){
+        return res.status(400).json({ errors:errors.array() });
+    }
+
+    // email, password nikalo body se
+    const { email, password } = req.body;
+
+    // check kro kya user exist krta hai
+    const user = await User.findOne({ email }).select('+password');
+
+    // agr nhi to..
+    if(!user){
+        return res.status(401).json("Invalid email or password!");
+    }
+
+    // agr ha to..password match kro
+    const isMatch = await user.comparePassword(password);
+
+
+    // agr password match nhi hua to..
+    if(!isMatch){
+        return res.status(401).json("Invalid email or password!");
+    }
+
+    //agr ho gya to...token generate kro.
+    const token = await user.generateAuthToken;
+
+    //response me token aur user bhejo
+    res.status(200).json({ token, user });
+}
