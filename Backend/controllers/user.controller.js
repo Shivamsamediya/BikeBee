@@ -4,7 +4,9 @@ import User from "../models/user.model.js"; // export default User;
 
 import { createUser } from "../services/user.service.js";// export const createUser
 
-import { validationResult } from "express-validator";
+import { cookie, validationResult } from "express-validator";
+
+import blackListToken from '../models/blacklistToken.model.js';
 
 export const registerUser = async (req,res,next)=>{
     // check kro if any err?
@@ -30,7 +32,7 @@ export const registerUser = async (req,res,next)=>{
     })
 
     // token generate kro
-    const token = await user.generateAuthToken;
+    const token = await user.generateAuthToken();
 
     // console.log(user);
     // console.log(token);
@@ -56,7 +58,7 @@ export const loginUser = async(req,res,next)=>{
 
     // agr nhi to..
     if(!user){
-        return res.status(401).json("Invalid email or password!");
+        return res.status(401).json({message:"Invalid email or password!"});
     }
 
     // agr ha to..password match kro
@@ -65,12 +67,28 @@ export const loginUser = async(req,res,next)=>{
 
     // agr password match nhi hua to..
     if(!isMatch){
-        return res.status(401).json("Invalid email or password!");
+        return res.status(401).json({message:"Invalid email or password!"});
     }
 
     //agr ho gya to...token generate kro.
-    const token = await user.generateAuthToken;
+    const token = await user.generateAuthToken();
+
+    res.cookie('token',token);
 
     //response me token aur user bhejo
     res.status(200).json({ token, user });
+}
+
+export const userProfile = async(req,res,next)=>{
+    return res.status(201).json(req.user);
+}
+
+export const logoutUser = async (req,res,next) => {
+    res.clearCookie('token');
+
+    const token = req.cookies.token || (req.headers.authorization?.split(' ')[1]);
+
+    blackListToken.create({ token });
+
+    res.status(200).json({message:"Logged out"});
 }
