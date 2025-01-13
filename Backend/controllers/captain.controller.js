@@ -4,6 +4,8 @@ import captainModel from '../models/captain.model.js';
 
 import { cookie, validationResult } from 'express-validator';
 
+import blacklistToken from '../models/blacklistToken.model.js'
+
 import { createCaptain } from '../services/captain.service.js';
 
 export const registerCaptain = async (req,res,next)=>{
@@ -75,4 +77,20 @@ export const loginCaptain = async(req,res,next)=>{
     res.cookie('token',token);
 
     res.status(200).json({ token, captain });
+}
+
+export const captainProfile = async (req,res,next)=>{
+    return res.status(201).json(req.captain); 
+}
+
+export const logoutCaptain = async(req,res,next)=>{
+    //token ko cookie me se clear kro
+    res.clearCookie('token');
+
+    const token = req.cookies.token || (req.headers.authorization?.split(' ')[1]);
+
+    //token ko blacklist kro
+    blacklistToken.create({ token });
+
+    res.status(200).json({message:"Logged out"});
 }

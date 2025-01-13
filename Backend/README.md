@@ -336,3 +336,161 @@ Authorization: Bearer <token>
       "message": "Captain with this email already exists"
     }
     ```
+
+### POST /captains/login
+
+#### Description
+This endpoint is used to log in an existing captain.
+
+#### Request Body
+The request body must be a JSON object containing the following fields:
+- `email` (string, required): The email address of the captain. Must be a valid email format.
+- `password` (string, required): The password for the captain. Must be at least 6 characters long.
+
+#### Example Request
+```json
+{
+  "email": "jane.doe@example.com",
+  "password": "password123"
+}
+```
+
+#### Responses
+
+##### Success (200)
+- **Description**: Captain logged in successfully.
+- **Content**: JSON object containing the generated token and captain details.
+- **Example**:
+  ```json
+  {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "captain": {
+      "_id": "60d0fe4f5311236168a109ca",
+      "fullName": {
+        "firstName": "Jane",
+        "lastName": "Doe"
+      },
+      "email": "jane.doe@example.com",
+      "vehicle": {
+        "color": "Red",
+        "plate": "XYZ123",
+        "capacity": 2,
+        "vehicleType": "motorcycle"
+      }
+    }
+  }
+  ```
+
+##### Error (400)
+- **Description**: Validation error or missing required fields.
+- **Content**: JSON object containing the error details.
+- **Example**:
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Invalid Email",
+        "param": "email",
+        "location": "body"
+      },
+      {
+        "msg": "Password must be atleast 6 characters long",
+        "param": "password",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+
+##### Error (401)
+- **Description**: Invalid email or password.
+- **Content**: JSON object containing the error message.
+- **Example**:
+  ```json
+  {
+    "message": "Invalid email or password"
+  }
+  ```
+
+### GET /captains/profile
+
+#### Description
+This endpoint is used to get the profile of the authenticated captain.
+
+#### Headers
+- `Authorization` (string, required): The JWT token of the authenticated captain.
+
+#### Example Request
+```
+GET /captains/profile
+Authorization: Bearer <token>
+```
+
+#### Responses
+
+##### Success (201)
+- **Description**: Captain profile retrieved successfully.
+- **Content**: JSON object containing the captain details.
+- **Example**:
+  ```json
+  {
+    "_id": "60d0fe4f5311236168a109ca",
+    "fullName": {
+      "firstName": "Jane",
+      "lastName": "Doe"
+    },
+    "email": "jane.doe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ123",
+      "capacity": 2,
+      "vehicleType": "motorcycle"
+    }
+  }
+  ```
+
+##### Error (401)
+- **Description**: Unauthorized captain.
+- **Content**: JSON object containing the error message.
+- **Example**:
+  ```json
+  {
+    "message": "Unauthorized captain"
+  }
+  ```
+
+### GET /captains/logout
+
+#### Description
+This endpoint is used to log out the authenticated captain and blacklist the token provided in cookie or headers.
+
+#### Headers
+- `Authorization` (string, required): The JWT token of the authenticated captain.
+
+#### Example Request
+```
+GET /captains/logout
+Authorization: Bearer <token>
+```
+
+#### Responses
+
+##### Success (200)
+- **Description**: Captain logged out successfully.
+- **Content**: JSON object containing the success message.
+- **Example**:
+  ```json
+  {
+    "message": "Logged out"
+  }
+  ```
+
+##### Error (401)
+- **Description**: Unauthorized captain.
+- **Content**: JSON object containing the error message.
+- **Example**:
+  ```json
+  {
+    "message": "Unauthorized captain"
+  }
+  ```
