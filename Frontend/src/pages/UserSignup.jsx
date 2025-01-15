@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserDataContext } from '../context/UserContext';
 
 function UserSignup() {
   const [firstName, setFirstName] = useState('');
@@ -8,7 +11,11 @@ function UserSignup() {
   const [password, setPassword] = useState('');
   const [userData, setUserData] = useState({});
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const { user, setUser } = React.useContext(UserDataContext);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newUserData = {
@@ -21,7 +28,21 @@ function UserSignup() {
     }; 
 
     console.log(newUserData);
-    setUserData(newUserData)
+    
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUserData);
+
+    if(response.status ===  201){
+      const data = response.data;
+
+      setUser(data.user);
+
+      localStorage.setItem('token',data.token);
+
+      navigate('/home');
+    }
+
+    // console.log(newUserData);
+    // setUserData(newUserData);
     setFirstName('');setLastName('');setEmail('');setPassword('');
   };
 
@@ -98,7 +119,7 @@ function UserSignup() {
               className="w-full p-2 mt-6 text-white font-bold bg-black rounded hover:bg-gray-800"
               type="submit"
             >
-              Sign Up
+              Create New Account
             </button>
           </form>
           <p className="mt-4 text-center text-gray-600">

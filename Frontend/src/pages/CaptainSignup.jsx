@@ -98,7 +98,7 @@ function CaptainSignup() {
               className="w-full p-2 mt-6 text-white font-bold bg-black rounded hover:bg-gray-800"
               type="submit"
             >
-              Sign Up
+              Create New Account
             </button>
           </form>
           <p className="mt-4 text-center text-gray-600">

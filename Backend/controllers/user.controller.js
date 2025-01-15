@@ -21,7 +21,7 @@ export const registerUser = async (req,res,next)=>{
     // req.body se name ,email,password nikalo
     const { fullName, email, password } = req.body;
     
-    const isUserExists =  await captainModel.findOne({email});
+    const isUserExists =  await User.findOne({email});
 
     if(isUserExists){
         return res.status(400).json({message:"User with this email already exists"});
