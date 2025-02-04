@@ -12,6 +12,8 @@ const app = express();
 import cookieParser from 'cookie-parser';
 
 import connectDB from "./db/db.js"; // export default connectDB;
+
+//routes ko import kiya
 import userRoute from "./routes/user.routes.js";
 import captainRoute from './routes/captain.routes.js';
 

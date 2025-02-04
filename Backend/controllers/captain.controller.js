@@ -52,30 +52,40 @@ export const registerCaptain = async (req,res,next)=>{
 }
 
 export const loginCaptain = async(req,res,next)=>{
+    //check if any err?
     const errors = validationResult(req);
 
+    //if err then return err status
     if(!errors.isEmpty()){
         return res.status(400).json({ errors:errors.array() });
     }
 
+    // req.body se email, password nikalo
     const { email, password } = req.body;
 
+    //check if captain with email and password exists?
     const captain = await captainModel.findOne({ email }).select('+password');
 
+    //if not return msg
     if(!captain){
         return res.status(401).json({message:"Invalid email or password"});
     }
     
+    //compare the password
     const isMatch = await captain.comparePassword(password);
 
+    //if password not matched
     if(!isMatch){
         return res.status(401).json({message:"Invalid email or password"});
     }
 
+    //generate the token
     const token = await captain.generateAuthToken();
 
+    //save token in cookie
     res.cookie('token',token);
 
+    //return token and captain
     res.status(200).json({ token, captain });
 }
 

@@ -23,15 +23,15 @@ export const authCaptain = async (req, res, next) => {
         //jwt verification of token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // user ko find kro database me
+        // captain ko find kro database me
         const captain = await captainModel.findById(decoded._id);
 
-        // agr user na mile
+        // agr captain na mile
         if (!captain) {
             return res.status(404).json({ message: "Captain not found" });
         }
 
-        //req object me user ko save kro
+        //req object me captain ko save kro
         req.captain = captain;
 
         // next middleware ko call
