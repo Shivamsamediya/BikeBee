@@ -1,14 +1,25 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import { CaptainDataContext } from '../context/CaptainContext';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function CaptainSignup() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [captainData, setCaptainData] = useState({});
+  const [color, setColor] = useState('');
+  const [plate, setPlate] = useState('');
+  const [capacity, setCapacity] = useState('');
+  const [vehicleType, setVehicleType] = useState('');
+  //const [captainData, setCaptainData] = useState({});
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const { captain, setCaptain } = React.useContext(CaptainDataContext)
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newCaptainData = {
@@ -16,13 +27,32 @@ function CaptainSignup() {
         firstName:firstName,
         lastName:lastName
       },
-      email:email,
-      password:password
+      email: email,
+      password: password,
+      vehicle: {
+        color: color,
+        plate: plate,
+        capacity: capacity,
+        vehicleType: vehicleType
+      }
     }; 
 
-    console.log(newCaptainData);
-    setCaptainData(newCaptainData)
-    setFirstName('');setLastName('');setEmail('');setPassword('');
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`,newCaptainData);
+
+    if(response.status ===  201){
+      const data = response.data;
+
+      setCaptain(data.captain);
+
+      localStorage.setItem('token',data.token);
+
+      navigate('/captain-home');
+    }
+
+    // console.log(newCaptainData);
+    // setCaptainData(newCaptainData);
+    setFirstName(''); setLastName(''); setEmail(''); setPassword('');
+    setColor(''); setPlate(''); setCapacity(''); setVehicleType('');
   };
 
   return (
@@ -30,12 +60,12 @@ function CaptainSignup() {
       <div className="w-full h-screen flex flex-col justify-between">
         <div className="flex justify-center items-center py-4">
           <img
-            src="https://files.oaiusercontent.com/file-TaFuR9e1vHty2dWZu8a5Rh?se=2025-01-14T12%3A25%3A54Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De37e4ad1-4ddd-4b3c-870b-2a673e89919a.webp&sig=2lJgYfUaFkf0KxFXbRy41UUzstWNcK3vCXEWcgMpCI0%3D"
+            src="https://cdn.iconscout.com/icon/free/png-512/free-online-cab-booking-icon-download-in-svg-png-gif-file-formats--apps-application-driver-public-transportation-pack-vehicle-icons-1380415.png?f=webp&w=256"
             alt="BikeBee Logo"
             className="h-16 rounded-full"
           />
         </div>
-        <div className="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-md overflow-y-auto flex-1">
+        <div className="w-full max-w-md mx-auto p-8 bg-white rounded-lg shadow-md overflow-y-auto flex-1">
           <h2 className="text-2xl font-bold text-center text-black">Signup to BikeBee</h2>
           <form className="mt-4" onSubmit={handleSubmit}>
             <div className="mt-4">
@@ -94,10 +124,19 @@ function CaptainSignup() {
                 required
               />
             </div>
-            <button
-              className="w-full p-2 mt-6 text-white font-bold bg-black rounded hover:bg-gray-800"
-              type="submit"
-            >
+            <h3 className="text-lg font-semibold mt-6">Vehicle Information</h3>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <input type="text" placeholder="Color" value={color} onChange={(e) => setColor(e.target.value)} className="p-2 border rounded" required />
+              <input type="text" placeholder="Plate" value={plate} onChange={(e) => setPlate(e.target.value)} className="p-2 border rounded" required />
+              <input type="number" placeholder="Capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} className="p-2 border rounded" required />
+              <select value={vehicleType} onChange={(e) => setVehicleType(e.target.value)} className="p-2 border rounded" required>
+                <option value="">Select Vehicle</option>
+                <option value="MotorCycle">MotorCycle</option>
+                <option value="Car">Car</option>
+                <option value="Auto">Auto</option>
+              </select>
+            </div>
+            <button className="w-full p-2 mt-6 text-white font-bold bg-black rounded hover:bg-gray-800" type="submit">
               Create New Account
             </button>
           </form>
@@ -109,10 +148,7 @@ function CaptainSignup() {
           </p>
         </div>
         <div className="w-full fixed bottom-0 bg-white py-4 shadow-md flex justify-center items-center">
-          <a
-            href="/signup"
-            className="w-3/4 md:w-1/4 p-2 flex justify-center items-center text-white font-bold bg-orange-500 rounded hover:bg-green-800"
-          >
+          <a href="/signup" className="w-3/4 md:w-1/4 p-2 flex justify-center items-center text-white font-bold bg-orange-500 rounded hover:bg-green-800">
             Sign Up as a User
           </a>
         </div>

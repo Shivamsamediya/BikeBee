@@ -1,21 +1,42 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import { CaptainDataContext } from '../context/CaptainContext';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function CaptainLogin() {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
-    const [captainData, setCaptainData] = useState({});
-  
-    const submitHandler = (e) =>{
-      e.preventDefault();
+    // const [captainData, setCaptainData] = useState({});
 
-      const newCaptainData = {
-        email: email,
-        password: password,
-      };
+    const { captain,setCaptain } = React.useContext(CaptainDataContext);
+
+    const navigate = useNavigate();
+  
+    const submitHandler = async (e) =>{
+      e.preventDefault();
+  
+    const newCaptainData = {
+      email: email,
+      password: password,
+    };
+
+    //console.log(newCaptainData);
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`,newCaptainData);
+
+    if(response.status ===  200){
+      const data = response.data;
+
+      setCaptain(data.user);
+
+      localStorage.setItem('token',data.token);
+
+      navigate('/captain-home');
+    }
       
-      console.log(newCaptainData);
-      setCaptainData(newCaptainData);
+      // console.log(newCaptainData);
+      // setCaptainData(newCaptainData);
     
       setEmail('');
       setPassword('');
@@ -25,7 +46,7 @@ function CaptainLogin() {
     <div className="w-full flex flex-col items-center bg-gray-50 min-h-screen py-4">
       <div className="flex justify-center items-center py-6">
         <img
-          src="https://files.oaiusercontent.com/file-TaFuR9e1vHty2dWZu8a5Rh?se=2025-01-14T12%3A25%3A54Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De37e4ad1-4ddd-4b3c-870b-2a673e89919a.webp&sig=2lJgYfUaFkf0KxFXbRy41UUzstWNcK3vCXEWcgMpCI0%3D"
+          src="https://cdn.iconscout.com/icon/free/png-512/free-online-cab-booking-icon-download-in-svg-png-gif-file-formats--apps-application-driver-public-transportation-pack-vehicle-icons-1380415.png?f=webp&w=256"
           alt="BikeBee Logo"
           className="h-12 md:h-16 rounded-full"
         />

@@ -9,7 +9,7 @@ function UserSignup() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userData, setUserData] = useState({});
+  //const [userData, setUserData] = useState({});
 
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ function UserSignup() {
       password:password
     }; 
 
-    console.log(newUserData);
+    //console.log(newUserData);
     
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUserData);
 
@@ -51,7 +51,7 @@ function UserSignup() {
       <div className="w-full h-screen flex flex-col justify-between">
         <div className="flex justify-center items-center py-4">
           <img
-            src="https://files.oaiusercontent.com/file-TaFuR9e1vHty2dWZu8a5Rh?se=2025-01-14T12%3A25%3A54Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De37e4ad1-4ddd-4b3c-870b-2a673e89919a.webp&sig=2lJgYfUaFkf0KxFXbRy41UUzstWNcK3vCXEWcgMpCI0%3D"
+            src="https://cdn.iconscout.com/icon/free/png-512/free-online-cab-booking-icon-download-in-svg-png-gif-file-formats--apps-application-driver-public-transportation-pack-vehicle-icons-1380415.png?f=webp&w=256"
             alt="BikeBee Logo"
             className="h-16 rounded-full"
           />
