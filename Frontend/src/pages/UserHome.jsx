@@ -262,6 +262,14 @@ function UserHome() {
                 Call Driver
               </button>
             </div>
+            <div className="flex justify-center mt-3">
+                <button
+                  type="submit"
+                  className="flex justify-center items-center w-1/2 p-2 bg-green-500 text-white rounded-lg text-md font-bold shadow-md hover:bg-gray-500 transition-all duration-300"
+                >
+                  Make a Payment
+                </button>
+              </div>
           </div>
         )}
       </div>
