@@ -17,6 +17,8 @@ import connectDB from "./db/db.js"; // export default connectDB;
 import userRoute from "./routes/user.routes.js";
 import captainRoute from './routes/captain.routes.js';
 
+import mapsRoute from './routes/maps.routes.js';
+
 connectDB();// fn call kiya
 
 // cors = cross origin resource sharing allow kiya.
@@ -33,6 +35,7 @@ app.get('/',(req,res)=>{
 // router for /users.
 app.use('/users',userRoute);
 app.use('/captains',captainRoute);
+app.use('/maps',mapsRoute);
 
 
 export default app;
