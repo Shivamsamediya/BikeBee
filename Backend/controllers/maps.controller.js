@@ -12,10 +12,16 @@ export const getCoordinates = async (req, res) => {
     }
 
   try {
+    //req body se address nikalo
     const { address } = req.body;
+
+    //check if address is there or not.
     if (!address) return res.status(400).json({ message: "Address is required." });
 
+    //coordinates nikalo.
     const coordinates = await getAddressCoordinates(address);
+
+    //response
     res.json(coordinates);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -32,17 +38,22 @@ export const getDistanceTime = async (req, res) => {
     }
 
   try {
+    // origin aur destination nikalo
     const { origin, destination } = req.body;
+
+    //check if present
     if (!origin || !destination) {
       return res.status(400).json({ message: "Both origin and destination are required." });
     }
 
-    // Call the getDistanceAndTime function with the coordinates
+    //getDistanceAndTime function ko call kro with origin and destination
     const distanceAndTime = await getDistanceAndTime(origin, destination);
+
+    //response bhejo
     res.json(distanceAndTime);
 
-    console.log(distanceAndTime.distance);
-    console.log(distanceAndTime.duration);
+    // console.log(distanceAndTime.distance);
+    // console.log(distanceAndTime.duration);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -58,12 +69,18 @@ export const getAutocomplete = async (req, res) => {
    }
 
   try {
+    // input nikalo
     const { input } = req.body; 
+
+    //check if present
     if (!input) {
       return res.status(400).json({ message: "Input is required." });
     }
-
+    
+    //generate suggestions
     const suggestions = await getAutocompleteSuggestions(input);
+
+    //send response
     res.json({ suggestions });
   } catch (error) {
     res.status(500).json({ message: error.message });

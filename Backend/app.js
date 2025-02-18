@@ -18,6 +18,7 @@ import userRoute from "./routes/user.routes.js";
 import captainRoute from './routes/captain.routes.js';
 
 import mapsRoute from './routes/maps.routes.js';
+import rideRoutes from './routes/ride.routes.js';
 
 connectDB();// fn call kiya
 
@@ -32,10 +33,11 @@ app.get('/',(req,res)=>{
     res.send("<h1>Hello World!</h1>");
 });
 
-// router for /users.
+// router for different endpoints.
 app.use('/users',userRoute);
 app.use('/captains',captainRoute);
 app.use('/maps',mapsRoute);
+app.use('/rides',rideRoutes);
 
 
 export default app;
