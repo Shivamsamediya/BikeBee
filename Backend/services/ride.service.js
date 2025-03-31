@@ -40,9 +40,9 @@ export const getFare = async (pickup, destination) => {
 
     // response for all vehicle types.
     return {
-      auto: baseFare.auto + dist * perKmRate.auto + time * perMinuteRate.auto,
-      car: baseFare.car + dist * perKmRate.car + time * perMinuteRate.car,
-      moto: baseFare.moto + dist * perKmRate.moto + time * perMinuteRate.moto,
+      auto: Math.round(baseFare.auto + dist * perKmRate.auto + time * perMinuteRate.auto),
+      car: Math.round(baseFare.car + dist * perKmRate.car + time * perMinuteRate.car),
+      moto: Math.round(baseFare.moto + dist * perKmRate.moto + time * perMinuteRate.moto),
     };
   } catch (error) {
     throw new Error("Error calculating fare: " + error.message);
