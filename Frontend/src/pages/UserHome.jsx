@@ -1,8 +1,10 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { SocketContext } from '../context/SocketContext.jsx';
+import { UserDataContext } from '../context/UserContext';
 
 function UserHome() {
   const [isFormActive, setIsFormActive] = useState(false);
@@ -13,6 +15,18 @@ function UserHome() {
   const [rideConfirmPanel, setRideConfirmPanel] = useState(false);
   const [rideConfirmed, setrideConfirmed] = useState(false);
   const [fares, setFares] = useState({ auto: 0, car: 0, moto: 0 });
+
+  const { socket } = useContext(SocketContext);
+
+  const { user } = useContext(UserDataContext);
+
+  //console.log(user);
+
+  useEffect(() => {
+    if (user && user._id) {
+      socket.emit("join", { userType: "user", userId: user._id });
+    }
+  }, [user, socket]);
 
   const formRef = useRef(null);
 
@@ -58,6 +72,39 @@ function UserHome() {
     setSelectedVehicle(vehicle);
     setRideConfirmPanel(true);
     setIsFormActive(false);
+  };
+
+  const createRide = async (vehicleType) => {
+    if (!pickup || !destination || !vehicleType) {
+      console.error('All fields are required to create a ride.');
+      return;
+    }
+  
+    try {
+      console.log('Creating ride with:', { pickup, destination, vehicleType });
+  
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/create`,
+        {
+          pickup,
+          destination,
+          vehicleType
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+  
+      if (response.status === 201) {
+        console.log('Ride created successfully:', response.data);
+      } else {
+        console.error('Failed to create ride:', response.data);
+      }
+    } catch (error) {
+      console.error('Error creating ride:', error.response?.data || error.message);
+    }
   };
 
   return (
@@ -189,6 +236,7 @@ function UserHome() {
                 type="button"
                 className="flex justify-center items-center w-2/5 p-2 bg-green-500 text-white rounded-lg text-md font-bold shadow-md hover:bg-gray-500 transition-all duration-300"
                 onClick={() => {
+                  createRide(selectedVehicle.toLowerCase()); 
                   setrideConfirmed(true);
                   setRideConfirmPanel(false);
                 }}

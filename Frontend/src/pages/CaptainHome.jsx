@@ -1,8 +1,11 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faMessage, faPhone, faTimes, faCheckCircle, faMoneyBill, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { CaptainDataContext } from '../context/CaptainContext';
+import { SocketContext } from '../context/SocketContext.jsx';
+
 
 function CaptainHome() {
   const [isFormActive, setIsFormActive] = useState(false);
@@ -10,6 +13,18 @@ function CaptainHome() {
   const [acceptedRide, setAcceptedRide] = useState(null);
   const [isGoingToPickup, setIsGoingToPickup] = useState(false);
   const [isRideCompleted, setIsRideCompleted] = useState(false);
+
+  const { socket } = useContext(SocketContext);
+  const { captain } = useContext(CaptainDataContext);
+
+  //console.log(captain);
+
+  useEffect(() => {
+    if (captain && captain._id) {
+      socket.emit("join", { userType: "captain", userId: captain._id });
+    }
+  }, [captain, socket]);
+
 
   const handleAcceptRide = () => {
     setAcceptedRide({
